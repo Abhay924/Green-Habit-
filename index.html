@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Green Habit Tracker - Unified Site</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ["Poppins", "sans-serif"]
+                    },
+                    colors: {
+                        primary: "#17cf54",
+                        secondaryAccent: "#005000",
+                        dark: {
+                            bg: '#0f172a',
+                            card: '#1e293b',
+                            text: '#f8fafc'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'wiggle': 'wiggle 1s ease-in-out infinite',
+                        'title-reveal': 'titleReveal 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        },
+                        titleReveal: {
+                            '0%': { transform: 'scaleY(0)', opacity: '0' },
+                            '50%': { transform: 'scaleY(1)', opacity: '1' },
+                            '100%': { opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(126, 223, 171, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.85);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-100 {
+            transition-delay: 100ms;
+        }
+
+        .delay-200 {
+            transition-delay: 200ms;
+        }
+
+        .delay-300 {
+            transition-delay: 300ms;
+        }
+
+        .card-3d {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+        }
+
+        .card-3d:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 30px -10px rgba(23, 207, 84, 0.25);
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        #tree-canvas {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .dark #tree-canvas {
+            opacity: 0.15;
+            mix-blend-mode: screen;
+        }
+
+        .btn-shine {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-shine::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+            transform: skewX(-25deg);
+            transition: 0.5s;
+        }
+
+        .btn-shine:hover::after {
+            left: 100%;
+            transition: 0.7s ease-in-out;
+        }
+
+        .page-transition {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+
+        .animated-title {
+            animation: title-reveal 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            transform-origin: bottom;
+            display: inline-block;
+            opacity: 0;
+        }
+
+        .mission-box {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .mission-box:hover {
+            box-shadow: 0 25px 50px -12px rgba(23, 207, 84, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .mission-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--tw-primary) 0%, var(--tw-secondaryAccent) 100%);
+            transition: width 0.3s ease;
+        }
+
+        .mission-box:hover::before {
+            width: 6px;
+        }
+
+        .team-card:hover .avatar-img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-[#F7FFF7] text-[#1C2833] transition-colors duration-500 dark:bg-dark-bg dark:text-slate-100 selection:bg-primary selection:text-white overflow-x-hidden relative"
+    style="--tw-primary: #17cf54; --tw-secondaryAccent: #005000;">
+    <canvas id="confetti-canvas"></canvas>
+    <canvas id="tree-canvas"></canvas>
+    <nav class="fixed w-full z-50 glass transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer group" onclick="navigateTo('home')">
+                    <div class="bg-primary/10 p-2 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <i class="ph ph-plant text-3xl text-primary group-hover:animate-wiggle"></i>
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight">
+                        <span class="text-secondaryAccent dark:text-primary transition-colors">Green</span> Habit
+                    </span>
+                </div>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="#home" onclick="navigateTo('home')"
+                        class="nav-link px-4 py-2 rounded-full text-sm font-semibold hover:bg-green-50 dark:hover:bg-white/5 transition-all cursor-pointer"
+                        data-page="page-home">Home</a>
+
+                    <a href="#about" onclick="navigateTo('about')"
+                        class="nav-link px-4 py-2 rounded-full text-sm font-semibold hover:bg-green-50 dark:hover:bg-white/5 transition-all cursor-pointer"
+                        data-page="page-about">Our Story</a>
+                    <a href="#features" onclick="navigateTo('features')"
+                        class="nav-link px-4 py-2 rounded-full text-sm font-semibold hover:bg-green-50 dark:hover:bg-white/5 transition-all cursor-pointer"
+                        data-page="page-features">Features</a>
+
+                    <a href="#tools" onclick="navigateTo('tools')"
+                        class="nav-link px-4 py-2 rounded-full text-sm font-semibold hover:bg-green-50 dark:hover:bg-white/5 transition-all cursor-pointer flex items-center gap-1 text-primary">
+                        <i class="ph ph-wrench"></i> Tools
+                    </a>
+
+                    <div class="w-px h-6 bg-gray-300 dark:bg-gray-700 mx-2"></div>
+                    <button id="theme-toggle"
+                        class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative overflow-hidden group">
+                        <i class="ph ph-moon text-xl dark:hidden group-hover:rotate-12 transition-transform"></i>
+                        <i
+                            class="ph ph-sun text-xl hidden dark:block text-yellow-400 group-hover:rotate-90 transition-transform"></i>
+                    </button>
+                </div>
+                <div class="md:hidden flex items-center gap-4">
+                    <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <i class="ph ph-moon text-xl dark:hidden"></i>
+                        <i class="ph ph-sun text-xl hidden dark:block text-yellow-400"></i>
+                    </button>
+                    <button id="mobile-menu-btn"
+                        class="text-darkText dark:text-white focus:outline-none p-2 active:scale-95 transition-transform">
+                        <i class="ph ph-list text-3xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-white/95 dark:bg-dark-card/95 backdrop-blur-md border-t dark:border-gray-800 absolute w-full shadow-xl transform origin-top transition-all duration-300 z-50">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#home" onclick="mobileNav('home')"
+                    class="block px-4 py-3 rounded-xl font-medium hover:bg-green-50 dark:hover:bg-gray-800 text-darkText dark:text-white">Home</a>
+                <a href="#about" onclick="mobileNav('about')"
+                    class="block px-4 py-3 rounded-xl font-medium hover:bg-green-50 dark:hover:bg-gray-800 text-darkText dark:text-white">Our
+                    Story</a>
+                <a href="#features" onclick="mobileNav('features')"
+                    class="block px-4 py-3 rounded-xl font-medium hover:bg-green-50 dark:hover:bg-gray-800 text-darkText dark:text-white">Features</a>
+                <a href="#tools" onclick="mobileNav('tools')"
+                    class="block px-4 py-3 rounded-xl font-medium hover:bg-green-50 dark:hover:bg-gray-800 text-darkText dark:text-white">Tools</a>
+            </div>
+        </div>
+    </nav>
+    <div class="pt-20 min-h-screen content-layer">
+        <div id="page-home" class="page-section block page-transition">
+
+            <div
+                class="relative min-h-[700px] flex items-center justify-center text-center px-6 pb-20 overflow-hidden group">
+                <div class="absolute inset-0 z-0 overflow-hidden rounded-b-3xl">
+                    <img src="https://images.pexels.com/photos/142497/pexels-photo-142497.jpeg?cs=srgb&dl=environment-forest-grass-142497.jpg&fm=jpg"
+                        onerror="this.onerror=null;this.src='https://images.pexels.com/photos/142497/pexels-photo-142497.jpeg?cs=srgb&dl=environment-forest-grass-142497.jpg&fm=jpg';"
+                        class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-110 ease-in-out"
+                        alt="Green forest background with sunlight">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent mix-blend-multiply">
+                    </div>
+                </div>
+
+                <div class="relative z-10 max-w-5xl mx-auto">
+                    <div class="animate-fade-in-up">
+
+                        <div class="mb-10 animate-float">
+                            <img src="https://t3.ftcdn.net/jpg/07/34/62/46/360_F_734624645_dfmvSLipJcVX478jQFLNPYIpJYVcQ2hY.jpg"
+                                onerror="this.onerror=null;this.src='https://t3.ftcdn.net/jpg/07/34/62/46/360_F_734624645_dfmvSLipJcVX478jQFLNPYIpJYVcQ2hY.jpg';"
+                                class="w-full max-w-2xl mx-auto object-cover rounded-3xl shadow-2xl border-4 border-white/50 backdrop-blur-md hover:scale-[1.02] transition-transform duration-500"
+                                alt="Nature Lightbulb">
+                        </div>
+
+                        <span
+                            class="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-semibold mb-6 border border-white/30">
+                            🌱 Sustainability Starts Here
+                        </span>
+                        <h2 class="text-4xl md:text-7xl font-bold text-white mb-8 leading-tight drop-shadow-2xl">
+                            Earth needs <span class="text-primary italic">Innovation</span>,<br> not just Technology.
+                        </h2>
+                        <p class="text-xl md:text-2xl text-gray-100 font-light max-w-3xl mx-auto mb-10 opacity-90">
+                            “In nature, nothing is perfect and everything is perfect. Trees can be contorted, bent in
+                            weird ways, and they're still beautiful.”
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <button onclick="navigateTo('tools')"
+                                class="btn-shine px-8 py-4 bg-primary text-white text-lg font-bold rounded-full shadow-lg hover:bg-secondaryAccent hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2">
+                                <i class="ph ph-rocket-launch text-xl"></i> Start Tracking
+                            </button>
+                            <button onclick="navigateTo('about')"
+                                class="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/40 text-white text-lg font-bold rounded-full shadow-lg hover:bg-white/20 transition-all duration-300">
+                                Learn More
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative -mt-20 z-30 px-6 max-w-6xl mx-auto">
+                <section
+                    class="bg-white/90 dark:bg-dark-card/90 backdrop-blur-xl rounded-3xl shadow-2xl p-10 md:p-16 text-center border border-white/20 dark:border-gray-700">
+                    <div
+                        class="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-primary rounded-full flex items-center justify-center shadow-lg border-4 border-white dark:border-dark-bg animate-bounce">
+                        <span class="text-4xl">🌿</span>
+                    </div>
+
+                    <h2 class="text-3xl md:text-4xl font-bold text-secondaryAccent dark:text-primary mb-4 mt-4">Start
+                        Living Green Today!</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">Join our movement and
+                        discover easy ways to make eco-friendly choices daily.</p>
+
+                    <button onclick="navigateTo('features')"
+                        class="btn-shine px-10 py-3 bg-darkText dark:bg-primary text-green-600 text-lg font-bold rounded-xl shadow-xl hover:scale-105 transition duration-300">
+                        <a href="WEB.html">Explore Habits</a>
+                    </button>
+                </section>
+            </div>
+
+            <section class="py-24 px-6">
+                <div class="max-w-6xl mx-auto">
+                    <div class="text-center mb-16 reveal">
+                        <span class="text-primary font-bold tracking-widest uppercase text-sm">Why Join Us?</span>
+                        <h2 class="text-4xl font-bold mt-2 text-darkText dark:text-white">Start Your Green Journey</h2>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-8">
+
+                        <div
+                            class="bg-white dark:bg-dark-card p-8 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800 card-3d reveal group">
+                            <div
+                                class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                                <span class="text-4xl">✅</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-darkText dark:text-white">Personalized Tracking</h3>
+                            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Track consumption, set realistic
+                                goals, and monitor your progress toward a smaller carbon footprint.</p>
+                        </div>
+
+                        <div
+                            class="bg-white dark:bg-dark-card p-8 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800 card-3d reveal delay-100 group">
+                            <div
+                                class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                                <span class="text-4xl">🌱</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-darkText dark:text-white">Habit Guidance</h3>
+                            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Get daily tips and reminders for
+                                easy, eco-friendly habits like saving water and reducing waste.</p>
+                        </div>
+
+                        <div
+                            class="bg-white dark:bg-dark-card p-8 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800 card-3d reveal delay-200 group">
+                            <div
+                                class="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                                <span class="text-4xl">🌎</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-darkText dark:text-white">Community Impact</h3>
+                            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Join challenges, share success
+                                stories, and see your collective impact on the planet.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-24 px-6 relative overflow-hidden reveal">
+                <div
+                    class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2">
+                </div>
+
+                <div
+                    class="max-w-6xl mx-auto relative z-10 bg-white/60 dark:bg-dark-card/60 backdrop-blur-md p-8 rounded-3xl border border-white/50 dark:border-gray-700">
+                    <div class="flex flex-col md:flex-row gap-16 items-center">
+                        <div class="flex-1 w-full">
+                            <div class="relative group">
+                                <div
+                                    class="absolute -inset-4 bg-gradient-to-r from-primary to-blue-500 rounded-2xl blur-lg opacity-30 group-hover:opacity-50 transition duration-500">
+                                </div>
+                                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80"
+                                    onerror="this.onerror=null;this.src='https://placehold.co/800x600/17cf54/ffffff?text=Sustainable+Web';"
+                                    alt="Sustainable web design"
+                                    class="relative rounded-2xl shadow-2xl w-full h-auto object-cover transform transition duration-500 hover:scale-[1.02]">
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">Our
+                                Vision</span>
+                            <h2 class="text-4xl font-bold mb-6 dark:text-white leading-tight">Green Web Development</h2>
+                            <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-8">
+                                We believe technology and sustainability go hand-in-hand. Our goal is to help businesses
+                                grow online through clean design, seamless functionality, and reliable support while
+                                maintaining an
+                                eco-conscious digital footprint.
+                            </p>
+                            <button onclick="navigateTo('about')"
+                                class="btn-shine px-8 py-3 bg-secondaryAccent text-white font-semibold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
+                                Meet The Team
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="py-24 px-6">
+                <div class="max-w-6xl mx-auto">
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <div
+                            class="group relative rounded-2xl overflow-hidden shadow-2xl reveal cursor-pointer border border-white/20">
+                            <div class="h-80 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1200&q=80"
+                                    onerror="this.onerror=null;this.src='https://placehold.co/1200x800/17cf54/ffffff?text=Minimalist+Living';"
+                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    alt="Nature">
+                            </div>
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
+                                <div
+                                    class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                    <p class="font-bold text-white text-xl">Sustainable living — small steps.</p>
+                                    <p
+                                        class="text-gray-300 text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        Discover the beauty of minimalism.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="rounded-2xl overflow-hidden shadow-2xl reveal delay-100 border-4 border-white dark:border-gray-700 bg-black">
+                            <div class="relative pb-[56.25%] h-0">
+                                <iframe class="absolute top-0 left-0 w-full h-full"
+                                    src="https://www.youtube.com/embed/0xk5FQqQOKk" title="Sustainability tips"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <div id="page-about" class="page-section hidden page-transition">
+            <main class="max-w-6xl mx-auto p-6 py-20 md:py-32">
+
+                <div class="text-center mb-16 pt-10">
+                    <h1 class="text-5xl md:text-7xl font-extrabold text-darkText dark:text-white mb-6">
+                        <span class="animated-title text-primary block">OUR STORY & TEAM</span>
+                    </h1>
+                    <p class="text-xl text-gray-500 dark:text-gray-400 max-w-3xl mx-auto reveal delay-300">
+                        The people and principles driving sustainable change.
+                    </p>
+                </div>
+
+
+                <section class="mb-24 reveal">
+                    <h2 class="text-3xl font-bold text-darkText dark:text-white mb-6 flex items-center gap-3">
+                        <i class="ph ph-sparkle text-primary"></i> Our Story
+                        <span class="w-20 h-px bg-primary/50"></span>
+                    </h2>
+                    <p
+                        class="text-xl text-gray-700 dark:text-gray-300 leading-relaxed bg-white dark:bg-dark-card p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 animate-fade-in-up">
+                        “Green Habit Tracker began with a simple belief: small daily actions can create a massive
+                        environmental change. Our team witnessed how people want to live sustainably but lack tools and
+                        motivation. This platform transforms small eco-friendly routines into enjoyable, trackable
+                        habits.”
+                    </p>
+                </section>
+
+
+                <section class="mb-24 reveal delay-100">
+                    <h2 class="text-3xl font-bold text-darkText dark:text-white mb-6 flex items-center gap-3">
+                        <i class="ph ph-target text-secondaryAccent dark:text-primary"></i> Our Mission
+                        <span class="w-20 h-px bg-primary/50"></span>
+                    </h2>
+                    <div
+                        class="mission-box bg-white dark:bg-dark-card p-8 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800 flex items-start gap-6">
+                        <i class="ph ph-leaf-fill text-6xl text-primary animate-pulse-slow"></i>
+                        <div>
+                            <p class="text-xl font-semibold text-darkText dark:text-white mb-2">A world of consistent
+                                green habits.</p>
+                            <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                                “Our mission is to make sustainable living accessible, engaging, and rewarding. By
+                                helping people stay consistent with green habits, we aim to build a community that
+                                protects the environment through meaningful daily actions.”
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section class="mb-20">
+                    <h2
+                        class="text-3xl font-bold text-center text-darkText dark:text-white mb-16 reveal delay-200 flex items-center justify-center gap-3">
+                        <span class="w-16 h-px bg-primary/50"></span>
+                        <i class="ph ph-users text-primary text-4xl"></i> Our Team
+                        <span class="w-16 h-px bg-primary/50"></span>
+                    </h2>
+
+                    <p class="text-center text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10 reveal delay-300">
+                        “Behind Green Habit Tracker is a passionate group of learners, developers, and environmental
+                        enthusiasts who believe technology can inspire real-world impact.”
+                    </p>
+
+                    <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-8 justify-center">
+
+
+                        <div
+                            class="team-card bg-white dark:bg-dark-card p-6 rounded-3xl shadow-lg hover:shadow-2xl text-center card-3d reveal group">
+                            <div
+                                class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-primary p-1 bg-white transition-all duration-500">
+                                <img src="https://cutiedp.com/wp-content/uploads/2025/07/alone-boy-dp-pic.webp"
+                                    onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=NISHANT+BAJPAI&background=005000&color=fff'"
+                                    alt="NISHANT BAJPAI"
+                                    class="avatar-img w-full h-full object-cover rounded-full transition-transform duration-500"
+                                    title="NISHANT BAJPAI (Project Presentation)">
+                            </div>
+                            <h3 class="text-xl font-bold text-darkText dark:text-white mb-1">NISHANT BAJPAI</h3>
+                            <p class="text-primary font-bold text-xs tracking-wide uppercase mb-3">Project Presentation
+                            </p>
+                            <div class="mt-4 flex justify-center gap-4">
+                                <a href="https://www.linkedin.com/in/nishant-bajpai-33bb922a6/"
+                                    class="text-gray-400 hover:text-primary transition-colors"><i
+                                        class="ph ph-linkedin-logo text-2xl"></i></a>
+                                <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i
+                                        class="ph ph-github-logo text-2xl"></i></a>
+                            </div>
+                        </div>
+
+
+                        <div
+                            class="team-card bg-white dark:bg-dark-card p-6 rounded-3xl shadow-lg hover:shadow-2xl text-center card-3d reveal delay-100 group">
+                            <div
+                                class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-primary p-1 bg-white transition-all duration-500">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlDcIgxFCHCWaApURPQc-aw22GmLfkrM5s-WHaxge7b09xd0YQeb0Wwo65lHoCIRvRBI4&usqp=CAU"
+                                    onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=ISPARSHITA+AGNIHOTRI&background=005000&color=fff'"
+                                    alt="ISPARSHITA AGNIHOTRI"
+                                    class="avatar-img w-full h-full object-cover rounded-full transition-transform duration-500"
+                                    title="ISPARSHITA AGNIHOTRI (Project documentation)">
+                            </div>
+                            <h3 class="text-xl font-bold text-darkText dark:text-white mb-1">ISPARSHITA AGNIHOTRI</h3>
+                            <p class="text-primary font-bold text-xs tracking-wide uppercase mb-3">Project documentation
+                            </p>
+                            <div class="mt-4 flex justify-center gap-4">
+                                <a href="https://www.linkedin.com/in/isparshita-agnihotri/"
+                                    class="text-gray-400 hover:text-primary transition-colors"><i
+                                        class="ph ph-linkedin-logo text-2xl"></i></a>
+                                <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i
+                                        class="ph ph-github-logo text-2xl"></i></a>
+                            </div>
+                        </div>
+
+
+                        <div
+                            class="team-card bg-white dark:bg-dark-card p-6 rounded-3xl shadow-lg hover:shadow-2xl text-center card-3d reveal delay-200 group">
+                            <div
+                                class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-primary p-1 bg-white transition-all duration-500">
+                                <img src="https://cutiedp.com/wp-content/uploads/2025/07/instagram-cute-dpz.webp"
+                                    onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=ANJALI+PANDEYa&background=005000&color=fff'"
+                                    alt="ANJALI PANDEY"
+                                    class="avatar-img w-full h-full object-cover rounded-full transition-transform duration-500"
+                                    title="ANJALI PANDEY (Frontend Lead)">
+                            </div>
+                            <h3 class="text-xl font-bold text-darkText dark:text-white mb-1">ANJALI PANDEY</h3>
+                            <p class="text-primary font-bold text-xs tracking-wide uppercase mb-3">Frontend Lead
+                            </p>
+                            <div class="mt-4 flex justify-center gap-4">
+                                <a href="http://www.linkedin.com/in/anjali-codechamp786"
+                                    class="text-gray-400 hover:text-primary transition-colors"><i
+                                        class="ph ph-linkedin-logo text-2xl"></i></a>
+                                <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i
+                                        class="ph ph-github-logo text-2xl"></i></a>
+                            </div>
+                        </div>
+
+                        <div
+                            class="team-card bg-white dark:bg-dark-card p-6 rounded-3xl shadow-lg hover:shadow-2xl text-center card-3d reveal delay-300 group">
+                            <div
+                                class="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-primary p-1 bg-white transition-all duration-500">
+                                <img src="https://i.pinimg.com/564x/b2/5d/85/b25d851ecf83d89f4f3538b2d01aea79.jpg"
+                                    onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=ABHAY+KUSHWAHA&background=005000&color=fff'"
+                                    alt="ABHAY KUSHWAHA"
+                                    class="avatar-img w-full h-full object-cover rounded-full transition-transform duration-500"
+                                    title="ABHAY KUSHWAHA(Project Lead)">
+                            </div>
+                            <h3 class="text-xl font-bold text-darkText dark:text-white mb-1">ABHAY KUSHWAHA</h3>
+                            <p class="text-primary font-bold text-xs tracking-wide uppercase mb-3">Backend & Integration
+                            </p>
+                            <p class="text-primary font-bold text-xs tracking-wide uppercase mb-3">And Strategist</p>
+                            <div class="mt-4 flex justify-center gap-4">
+                                <a href="www.linkedin.com/in/abhay-kushwaha-715b20305"
+                                    class="text-gray-400 hover:text-primary transition-colors"><i
+                                        class="ph ph-linkedin-logo text-2xl"></i></a>
+                                <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i
+                                        class="ph ph-github-logo text-2xl"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <div id="page-features" class="page-section hidden page-transition">
+            <main class="max-w-6xl mx-auto p-6 py-12">
+                <div class="text-center mb-20 pt-10 reveal">
+                    <h2 class="text-5xl font-bold text-primary mb-6">Eco-Friendly Tips & Habits</h2>
+                    <p class="text-xl text-gray-500 max-w-3xl mx-auto">Small changes in your daily routine can make a
+                        massive difference for our planet.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div
+                        class="p-8 bg-white dark:bg-dark-card rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800 text-center card-3d reveal group">
+                        <div
+                            class="w-20 h-20 mx-auto bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-6 group-hover:rotate-12 transition-transform">
+                            <span class="text-5xl">💧</span>
+                        </div>
+                        <h3 class="text-xl font-bold mt-4 text-darkText dark:text-white">Save Water</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2 text-sm leading-relaxed">Take shorter showers
+                            and fix any leaky faucets immediately to conserve this precious resource.</p>
+                    </div>
+                    <div
+                        class="p-8 bg-white dark:bg-dark-card rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800 text-center card-3d reveal delay-100 group">
+                        <div
+                            class="w-20 h-20 mx-auto bg-yellow-50 dark:bg-yellow-900/20 rounded-full flex items-center justify-center mb-6 group-hover:rotate-12 transition-transform">
+                            <span class="text-5xl">💡</span>
+                        </div>
+                        <h3 class="text-xl font-bold mt-4 text-darkText dark:text-white">Reduce Energy Use</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2 text-sm leading-relaxed">Switch to LED bulbs and
+                            unplug electronics when they are not in use (vampire power!).</p>
+                    </div>
+                    <div
+                        class="p-8 bg-white dark:bg-dark-card rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800 text-center card-3d reveal delay-200 group">
+                        <div
+                            class="w-20 h-20 mx-auto bg-purple-50 dark:bg-purple-900/20 rounded-full flex items-center justify-center mb-6 group-hover:rotate-12 transition-transform">
+                            <span class="text-5xl">🛒</span>
+                        </div>
+                        <h3 class="text-xl font-bold mt-4 text-darkText dark:text-white">Bring Your Own Bag</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2 text-sm leading-relaxed">Say no to plastic bags.
+                            Always carry a reusable shopping bag with you.</p>
+                    </div>
+                    <div
+                        class="p-8 bg-white dark:bg-dark-card rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800 text-center card-3d reveal group">
+                        <div
+                            class="w-20 h-20 mx-auto bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-6 group-hover:rotate-12 transition-transform">
+                            <span class="text-5xl">🍽</span>
+                        </div>
+                        <h3 class="text-xl font-bold mt-4 text-darkText dark:text-white">Compost Food Scraps</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2 text-sm leading-relaxed">Turn kitchen waste into
+                            nutrient-rich soil for your garden instead of sending it to a landfill.</p>
+                    </div>
+                    <div
+                        class="p-8 bg-white dark:bg-dark-card rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800 text-center card-3d reveal delay-100 group">
+                        <div
+                            class="w-20 h-20 mx-auto bg-orange-50 dark:bg-orange-900/20 rounded-full flex items-center justify-center mb-6 group-hover:rotate-12 transition-transform">
+                            <span class="text-5xl">🚴</span>
+                        </div>
+                        <h3 class="text-xl font-bold mt-4 text-darkText dark:text-white">Sustainable Commute</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2 text-sm leading-relaxed">Walk or bike for short
+                            trips — it’s good for your health and the planet.</p>
+                    </div>
+                    <div
+                        class="p-8 bg-white dark:bg-dark-card rounded-3xl shadow-lg border border-gray-100 dark:border-gray-800 text-center card-3d reveal delay-200 group">
+                        <div
+                            class="w-20 h-20 mx-auto bg-teal-50 dark:bg-teal-900/20 rounded-full flex items-center justify-center mb-6 group-hover:rotate-12 transition-transform">
+                            <span class="text-5xl">♻</span>
+                        </div>
+                        <h3 class="text-xl font-bold mt-4 text-darkText dark:text-white">Recycle Smartly</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2 text-sm leading-relaxed">Sort waste properly and
+                            learn your area’s recycling rules.</p>
+                    </div>
+                </div>
+
+                <section
+                    class="text-center py-16 bg-white dark:bg-dark-card rounded-3xl mt-16 shadow-lg reveal border border-gray-100 dark:border-gray-800">
+                    <h2 class="text-3xl font-bold text-darkText dark:text-white mb-4">Start Living Green Today!</h2>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8">Join our movement and discover easy ways to make
+                        eco-friendly choices daily.</p>
+                    <button onclick="navigateTo('tools')"
+                        class="btn-shine px-8 py-3 bg-primary text-white font-bold rounded-lg shadow-lg hover:shadow-primary/50 transition duration-300">
+                        Explore Tools
+                    </button>
+                </section>
+            </main>
+        </div>
+        <div id="page-tools" class="page-section hidden page-transition">
+            <main class="max-w-6xl mx-auto p-6 py-12">
+                <div class="text-center mb-16 pt-10 reveal">
+                    <span class="text-primary font-bold tracking-wider uppercase text-sm">Interactive Features</span>
+                    <h2 class="text-5xl font-bold mt-2 mb-4 dark:text-white">Green Tools</h2>
+                    <p class="text-gray-500">Track your progress and calculate your impact.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div
+                        class="bg-white dark:bg-dark-card rounded-3xl shadow-2xl p-8 border border-gray-100 dark:border-gray-700 reveal relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-8">
+                            <h3 class="text-2xl font-bold text-darkText dark:text-white flex items-center gap-3">
+                                <span class="bg-primary/10 p-2 rounded-lg text-primary"><i
+                                        class="ph ph-check-square"></i></span>
+                                Daily Checklist
+                            </h3>
+                            <span id="progress-percent" class="text-3xl font-bold text-primary">0%</span>
+                        </div>
+
+
+                        <div class="mb-8">
+                            <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                <span id="progress-text">0/6 Completed</span>
+                                <span>Goal: 100%</span>
+                            </div>
+                            <div
+                                class="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-4 overflow-hidden shadow-inner">
+                                <div id="progress-bar"
+                                    class="bg-gradient-to-r from-primary to-green-400 h-4 rounded-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(23,207,84,0.5)]"
+                                    style="width: 0%"></div>
+                            </div>
+                        </div>
+
+
+                        <div class="space-y-3" id="habits-container">
+
+                        </div>
+                        <div id="celebration-overlay"
+                            class="absolute inset-0 bg-white/90 dark:bg-dark-card/95 z-20 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
+                            <span class="text-6xl mb-4 animate-bounce">🏆</span>
+                            <h3 class="text-2xl font-bold text-primary">All Done!</h3>
+                            <p class="text-gray-600 dark:text-gray-300">Great job today!</p>
+                            <button onclick="resetTracker()"
+                                class="mt-6 px-6 py-2 bg-gray-200 dark:bg-gray-700 rounded-full text-sm font-semibold hover:bg-gray-300 transition-colors">Reset</button>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-dark-card rounded-3xl shadow-2xl p-8 border border-gray-100 dark:border-gray-700 reveal delay-100 flex flex-col">
+                        <h3 class="text-2xl font-bold mb-6 text-darkText dark:text-white flex items-center gap-3">
+                            <span class="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg text-blue-500"><i
+                                    class="ph ph-calculator"></i></span>
+                            CO2 Saver
+                        </h3>
+
+                        <div class="space-y-6 flex-grow">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Miles NOT
+                                    driven (Walked/Biked)</label>
+                                <div class="relative">
+                                    <input type="number" id="calc-miles"
+                                        class="w-full px-4 py-4 pl-12 rounded-2xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:outline-none transition-all dark:text-white shadow-sm"
+                                        placeholder="e.g. 20">
+                                    <i
+                                        class="ph ph-bicycle absolute left-4 top-1/2 -translate-y-1/2 text-xl text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Plastic
+                                    Bottles Avoided</label>
+                                <div class="relative">
+                                    <input type="number" id="calc-bottles"
+                                        class="w-full px-4 py-4 pl-12 rounded-2xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-primary focus:outline-none transition-all dark:text-white shadow-sm"
+                                        placeholder="e.g. 5">
+                                    <i
+                                        class="ph ph-drop absolute left-4 top-1/2 -translate-y-1/2 text-xl text-gray-400"></i>
+                                </div>
+                            </div>
+                            <button onclick="calculateImpact()"
+                                class="btn-shine w-full py-4 bg-primary text-white font-bold rounded-2xl shadow-lg hover:bg-secondaryAccent hover:-translate-y-1 transition-all mt-4">
+                                Calculate Impact
+                            </button>
+                        </div>
+
+                        <div id="result-area"
+                            class="mt-8 p-6 bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl text-center hidden border border-green-200 dark:border-green-800 transform transition-all duration-500 scale-95 opacity-0">
+                            <p
+                                class="text-xs uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest mb-2">
+                                Estimated Annual Savings</p>
+                            <div
+                                class="text-5xl font-extrabold text-primary mb-2 flex justify-center items-baseline gap-2">
+                                <span id="result-val">0</span> <span class="text-xl text-gray-500 font-medium">kg</span>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">of CO2 prevented from entering the
+                                atmosphere!</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+    </div>
+
+    <footer class="bg-white dark:bg-dark-card border-t border-gray-100 dark:border-gray-800 mt-10 py-12 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <p class="font-bold text-xl mb-1 dark:text-white">Green Habit Tracker</p>
+                <p class="text-gray-500 text-sm">© <span id="year"></span> All rights reserved.</p>
+            </div>
+            <div class="flex gap-6 text-gray-500">
+                <a href="#"
+                    class="hover:text-primary transition-colors bg-gray-100 dark:bg-gray-800 p-2 rounded-full"><i
+                        class="ph ph-twitter-logo text-xl"></i></a>
+                <a href="#"
+                    class="hover:text-primary transition-colors bg-gray-100 dark:bg-gray-800 p-2 rounded-full"><i
+                        class="ph ph-instagram-logo text-xl"></i></a>
+                <a href="#"
+                    class="hover:text-primary transition-colors bg-gray-100 dark:bg-gray-800 p-2 rounded-full"><i
+                        class="ph ph-facebook-logo text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        document.documentElement.style.setProperty('--tw-primary', '#17cf54');
+        document.documentElement.style.setProperty('--tw-secondaryAccent', '#005000');
+
+        function navigateTo(pageName) {
+            const pages = document.querySelectorAll('.page-section');
+
+            pages.forEach(page => {
+                if (page.classList.contains('block')) {
+                    page.style.opacity = '0';
+                    setTimeout(() => {
+                        page.classList.add('hidden');
+                        page.classList.remove('block');
+                        page.style.opacity = '1';
+                    }, 300);
+                }
+            });
+
+            setTimeout(() => {
+                const target = document.getElementById('page-' + pageName);
+                if (target) {
+                    target.classList.remove('hidden');
+                    target.classList.add('block');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setTimeout(revealElements, 100);
+                }
+            }, 300);
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-primary', 'bg-green-50', 'dark:bg-white/10');
+                link.classList.add('text-darkText', 'dark:text-white');
+
+                if (link.getAttribute('href') === '#' + pageName) {
+                    link.classList.remove('text-darkText', 'dark:text-white');
+                    link.classList.add('text-primary', 'bg-green-50', 'dark:bg-white/10');
+                }
+            });
+        }
+
+        function revealElements() {
+            const reveals = document.querySelectorAll('.page-section:not(.hidden) .reveal');
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const revealTop = reveals[i].getBoundingClientRect().top;
+                const revealPoint = 100;
+
+                if (revealTop < windowHeight - revealPoint) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+        const habits = [
+            { title: 'Shorter Shower', icon: 'ph-drop' },
+            { title: 'Green Commute', icon: 'ph-bicycle' },
+            { title: 'Plant-Based Meal', icon: 'ph-carrot' },
+            { title: 'Unplug Devices', icon: 'ph-plug' },
+            { title: 'Reusable Bag', icon: 'ph-bag' },
+            { title: 'Lights Off', icon: 'ph-lightbulb' }
+        ];
+
+        function initTracker() {
+            const container = document.getElementById('habits-container');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            habits.forEach((habit, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-4 p-4 rounded-2xl border border-gray-100 dark:border-gray-600 cursor-pointer hover:bg-green-50 dark:hover:bg-gray-800 transition-all group duration-300';
+                div.onclick = function () { toggleHabit(this); };
+                div.innerHTML = `
+                    <div class="checkbox w-8 h-8 rounded-xl border-2 border-gray-300 dark:border-gray-500 flex items-center justify-center transition-all group-hover:border-primary duration-300 shadow-sm bg-white dark:bg-gray-700">
+                        <i class="ph ph-check text-white text-lg opacity-0 transform scale-0 transition-all duration-300"></i>
+                    </div>
+                    <div class="flex items-center gap-3 text-gray-700 dark:text-gray-200 font-medium text-lg">
+                        <div class="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg group-hover:bg-white dark:group-hover:bg-gray-600 transition-colors">
+                             <i class="ph ${habit.icon} text-primary text-xl"></i>
+                        </div>
+                        ${habit.title}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleHabit(el) {
+            const checkbox = el.querySelector('.checkbox');
+            const icon = checkbox.querySelector('i');
+            const isChecked = checkbox.classList.contains('bg-primary');
+
+            if (isChecked) {
+                checkbox.classList.remove('bg-primary', 'border-primary', 'rotate-3');
+                checkbox.classList.add('border-gray-300', 'bg-white', 'dark:bg-gray-700');
+                icon.classList.add('opacity-0', 'scale-0');
+            } else {
+                checkbox.classList.remove('border-gray-300', 'bg-white', 'dark:bg-gray-700');
+                checkbox.classList.add('bg-primary', 'border-primary', 'rotate-3');
+                icon.classList.remove('opacity-0', 'scale-0');
+                el.classList.add('scale-95');
+                setTimeout(() => el.classList.remove('scale-95'), 150);
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const total = habits.length;
+            const checked = document.querySelectorAll('#habits-container .checkbox.bg-primary').length;
+            const percentage = Math.round((checked / total) * 100);
+
+            document.getElementById('progress-text').innerText = `${checked}/${total} Completed`;
+            document.getElementById('progress-percent').innerText = `${percentage}%`;
+            document.getElementById('progress-bar').style.width = `${percentage}%`;
+
+            if (checked === total) {
+                fireConfetti();
+                const overlay = document.getElementById('celebration-overlay');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                overlay.classList.add('opacity-100', 'pointer-events-auto');
+            } else {
+                const overlay = document.getElementById('celebration-overlay');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                overlay.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+        }
+
+        function resetTracker() {
+            const overlay = document.getElementById('celebration-overlay');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            overlay.classList.remove('opacity-100', 'pointer-events-auto');
+            initTracker();
+            updateProgress();
+        }
+
+        function fireConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const particleCount = 150;
+            const colors = ['#17cf54', '#FFD700', '#FF6347', '#4169E1'];
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    w: Math.random() * 10 + 5,
+                    h: Math.random() * 10 + 5,
+                    speedX: Math.random() * 10 - 5,
+                    speedY: Math.random() * 10 - 5,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    gravity: 0.1
+                });
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, index) => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    p.speedY += p.gravity;
+
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.w, p.h);
+
+                    if (p.y > canvas.height) particles.splice(index, 1);
+                });
+
+                if (particles.length > 0) requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function calculateImpact() {
+            const miles = parseFloat(document.getElementById('calc-miles').value) || 0;
+            const bottles = parseFloat(document.getElementById('calc-bottles').value) || 0;
+
+            const savingsPerWeek = (miles * 0.404) + (bottles * 0.0828);
+            const savings = savingsPerWeek * 52;
+
+            const resultArea = document.getElementById('result-area');
+            resultArea.classList.remove('hidden');
+
+            setTimeout(() => {
+                resultArea.classList.remove('scale-95', 'opacity-0');
+                resultArea.classList.add('scale-100', 'opacity-100');
+            }, 10);
+
+            animateValue("result-val", 0, savings, 1500);
+        }
+
+        function animateValue(id, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                document.getElementById(id).innerHTML = value.toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    document.getElementById(id).innerHTML = end.toFixed(1);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        const treeCanvas = document.getElementById('tree-canvas');
+        const treeCtx = treeCanvas.getContext('2d');
+        let treeW, treeH;
+        let growState = 0;
+
+        function resizeTreeCanvas() {
+            treeW = treeCanvas.width = window.innerWidth;
+            treeH = treeCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeTreeCanvas);
+
+        function drawBranch(x, y, len, angle, width, depth) {
+            treeCtx.beginPath();
+            treeCtx.save();
+
+            const isDark = document.documentElement.classList.contains('dark');
+            treeCtx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(23, 207, 84, 0.4)';
+            treeCtx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(23, 207, 84, 0.2)';
+
+            treeCtx.lineWidth = width;
+            treeCtx.lineCap = "round";
+            treeCtx.translate(x, y);
+            treeCtx.rotate(angle * Math.PI / 180);
+
+            treeCtx.moveTo(0, 0);
+            treeCtx.lineTo(0, -len);
+            treeCtx.stroke();
+
+            if (len < 10 || depth <= 0) {
+                treeCtx.beginPath();
+                treeCtx.arc(0, -len, Math.max(2, 5 * growState), 0, Math.PI * 2);
+                treeCtx.fill();
+                treeCtx.restore();
+                return;
+            }
+
+            treeCtx.translate(0, -len);
+            const time = Date.now() / 2000;
+            const sway = Math.sin(time + depth) * 1.5;
+            drawBranch(0, 0, len * 0.75, -20 + sway, width * 0.7, depth - 1);
+            drawBranch(0, 0, len * 0.75, 20 + sway, width * 0.7, depth - 1);
+
+            treeCtx.restore();
+        }
+
+        function animateGrowingTree() {
+            treeCtx.clearRect(0, 0, treeW, treeH);
+            if (growState < 1) growState += 0.005;
+            drawBranch(treeW / 2, treeH, 140 * growState, 0, 16 * growState, 8);
+            requestAnimationFrame(animateGrowingTree);
+        }
+
+        function mobileNav(page) {
+            navigateTo(page);
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        window.onload = function () {
+
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            window.addEventListener('scroll', revealElements);
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+            document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
+            if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+            initTracker();
+            resizeTreeCanvas();
+            animateGrowingTree();
+            revealElements();
+            const hash = window.location.hash.replace('#', '');
+            if (hash && hash !== 'home') navigateTo(hash);
+            else navigateTo('home');
+        };
+    </script>
+</body>
+
+</html>

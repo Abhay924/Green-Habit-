@@ -1,0 +1,23 @@
+{
+  "name": "green-habit-backend",
+  "version": "1.0.0",
+  "description": "Backend server for the Green Habit Ecosystem app.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "firebase",
+    "express",
+    "backend"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "firebase": "^12.5.0",
+    "firebase-admin": "^12.1.0"
+  }
+}
