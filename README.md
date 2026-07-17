@@ -42,10 +42,10 @@ The project aims to make sustainable living simple, engaging, and rewarding whil
 
 ---
 
-# ✨ Feature Status
+# ✨ Feature
 
-| Feature | Status |
-|---------|:------:|
+| Feature |
+|---------|
 | User Authentication 
 | Email & Password Login 
 | Google Sign-In
