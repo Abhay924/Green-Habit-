@@ -1,17 +1,20 @@
-# 🌱 Green Habit Tracker
-
 <div align="center">
 
-![Green Habit Tracker]([https://img.shields.io/badge/Project-Green%20Habit%20Tracker-22c55e?style=for-the-badge](https://nexyrasystems.com/eco.html#home))
+# 🌱 Green Habit Tracker
 
-![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
-![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black)
+**A sustainability-focused habit tracking application that empowers users to build eco-friendly routines, monitor daily progress, and stay motivated through consistent habit formation.**
 
-**Build Better Habits. Save the Planet. 🌍**
+<p>
+  <img src="https://img.shields.io/badge/Status-Active%20Development-F59E0B?style=for-the-badge" alt="Status" />
+  <img src="https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge" alt="License" />
+</p>
 
-A modern AI-powered sustainability platform that encourages people to build eco-friendly habits, participate in environmental activities, monitor their progress, and contribute toward a greener future.
+<p>
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
+  <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase" />
+</p>
 
 </div>
 
@@ -19,153 +22,120 @@ A modern AI-powered sustainability platform that encourages people to build eco-
 
 # 📖 Overview
 
-Green Habit Tracker is a complete sustainability ecosystem developed using HTML, Tailwind CSS, JavaScript and Firebase.
+Green Habit Tracker is a web application designed to encourage sustainable living by helping users develop and maintain environmentally friendly habits. The application allows users to record daily eco-friendly activities, monitor their progress through streaks and reward points, and stay motivated with a clean, responsive interface.
 
-The platform helps users reduce their carbon footprint through habit tracking, environmental awareness, AI assistance, community challenges, waste reporting and smart dashboards.
-
----
-
-# ✨ Features
-
-## 🌿 Habit Tracking
-
-- Daily Green Habits
-- Habit Completion
-- Habit Streaks
-- Progress Tracking
-- Reward Points
-- Achievement Badges
+The project aims to make sustainable living simple, engaging, and rewarding while providing a scalable foundation for future AI-powered and community-driven features.
 
 ---
 
-## 🤖 AI Assistant
+# 📌 Project Snapshot
 
-Dharti MITRA AI
-
-- Sustainability guidance
-- Eco tips
-- Habit recommendations
-- Green lifestyle suggestions
-- Multi-language support
-
----
-
-## 👥 User Authentication
-
-- Email Login
-- Signup
-- Google Authentication
-- Guest Login
-- Password Reset
-- Firebase Authentication
+| Property | Details |
+|-----------|----------|
+| **Project Type** | Frontend Web Application |
+| **Development Status** | 🟡 Active Development |
+| **Architecture** | Client-side Application with Firebase Backend |
+| **Frontend** | HTML5 • Tailwind CSS • JavaScript (ES6) |
+| **Backend Services** | Firebase Authentication • Cloud Firestore |
+| **Hosting** | Firebase Hosting |
+| **License** | MIT |
 
 ---
 
-## 🌍 Community Features
+# ✨ Feature Status
 
-- Eco Challenges
-- Leaderboard
-- Community Participation
-- Green Campaigns
-- Environmental Awareness
-
----
-
-## 🗑 Waste Reporting
-
-Users can report
-
-- Garbage
-- Plastic Waste
-- Illegal Dumping
-- Public Cleanliness Issues
-
----
-
-## 📚 Knowledge Library
-
-Educational resources including
-
-- Articles
-- Videos
-- Infographics
-- Sustainability Tips
+| Feature | Status |
+|---------|:------:|
+| User Authentication 
+| Email & Password Login 
+| Google Sign-In
+| Guest Login 
+| Daily Habit Tracking 
+| Habit Streak Monitoring 
+| Reward Points System 
+| Responsive User Interface 
+| Dark Mode 
+| AI Assistant (Dharti MITRA) 
+| Community Leaderboard 
+| Eco Challenges 
+| Carbon Footprint Calculator 
+| Waste Reporting System 
+| Sustainability Knowledge Library 
+| Green Events Directory
 
 ---
 
-## 📅 Green Events
+# 🚀 Upcoming Features
 
-- Plantation Drives
-- NGO Activities
-- Community Events
-- Awareness Campaigns
+### 🤖 AI Assistant (Dharti MITRA)
+
+An intelligent sustainability assistant that provides personalized eco-friendly tips, habit recommendations, and practical guidance for building greener daily routines.
+
+### 🏆 Community Leaderboard
+
+Compete with other users through rankings, streaks, reward points, and community-driven sustainability challenges.
+
+### 🌱 Eco Challenges
+
+Participate in weekly and monthly environmental challenges designed to encourage consistent habit building.
+
+### 🧮 Carbon Footprint Calculator
+
+Estimate your environmental impact based on daily activities and receive actionable recommendations to reduce your carbon footprint.
+
+### 🗑 Waste Reporting System
+
+Allow users to report garbage dumps, illegal dumping, and public cleanliness issues to encourage community participation.
+
+### 📚 Sustainability Knowledge Library
+
+Access articles, guides, videos, and educational resources focused on sustainable living and environmental awareness.
+
+### 🌍 Green Events Directory
+
+Discover plantation drives, clean-up campaigns, NGO activities, and other local environmental events.
 
 ---
 
-## 📊 Dashboard
+# 🏗 Architecture
 
-Track
-
-- Green Points
-- Habit Progress
-- Daily Activities
-- Achievements
-- Community Impact
-
----
-
-## 🌙 UI Features
-
-- Responsive Design
-- Dark Mode
-- Glassmorphism
-- Animations
-- Mobile Friendly
-- Smooth Navigation
+```text
+                    Browser
+                       │
+                       ▼
+         HTML • Tailwind CSS • JavaScript
+                       │
+            ┌──────────┴──────────┐
+            ▼                     ▼
+ Firebase Authentication   Cloud Firestore
+```
 
 ---
 
-# 🛠 Tech Stack
+# 🛠 Technology Stack
 
-## Frontend
-
-- HTML5
-- Tailwind CSS
-- JavaScript (ES6)
-
-## Backend
-
-- Firebase
-
-## Database
-
-- Cloud Firestore
-
-## Authentication
-
-- Firebase Authentication
-
-## Hosting
-
-- Firebase Hosting (Recommended)
+| Layer | Technologies |
+|--------|--------------|
+| Frontend | HTML5, Tailwind CSS, JavaScript (ES6) |
+| Authentication | Firebase Authentication |
+| Database | Cloud Firestore |
+| Hosting | Firebase Hosting |
 
 ---
 
 # 📂 Project Structure
 
-```
+```text
 Green-Habit-Tracker/
-
 │
+├── assets/          # Icons, illustrations, and static assets
+├── css/             # Stylesheets
+├── firebase/        # Firebase configuration
+├── images/          # Images and project resources
+├── js/              # JavaScript source files
 ├── index.html
 ├── WEB.html
-├── css/
-├── js/
-├── assets/
-├── images/
-├── firebase/
 ├── README.md
-│
 └── LICENSE
 ```
 
@@ -173,158 +143,122 @@ Green-Habit-Tracker/
 
 # 🚀 Getting Started
 
-## Clone Repository
+Clone the repository.
 
 ```bash
-git clone https://github.com/yourusername/Green-Habit-Tracker.git
+git clone https://github.com/Abhay924/Green-Habit-.git
+
+cd Green-Habit-
 ```
 
-Go to project
-
-```bash
-cd Green-Habit-Tracker
-```
-
-Open
-
-```
-index.html
-```
-
-or
-
-Use Live Server in VS Code.
+Run the application using **VS Code Live Server**, or simply open **index.html** in your preferred browser.
 
 ---
 
-# 🔥 Firebase Setup
+# 🔥 Firebase Configuration
 
-Create Firebase Project
-
-Enable
-
-- Authentication
-- Firestore Database
-- Hosting
-
-Replace Firebase Config
+1. Create a Firebase project.
+2. Enable **Firebase Authentication**.
+3. Enable **Cloud Firestore**.
+4. Replace the configuration below with your project credentials.
 
 ```javascript
 const firebaseConfig = {
-
-apiKey: "",
-
-authDomain: "",
-
-projectId: "",
-
-storageBucket: "",
-
-messagingSenderId: "",
-
-appId: ""
-
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 ```
 
----
-
-# 📱 Screens Included
-
-- Home Page
-- About
-- Features
-- Dashboard
-- AI Assistant
-- Habit Tracker
-- Waste Reporting
-- Library
-- Events
-- Profile
+> [!IMPORTANT]
+> Never commit production Firebase credentials to a public repository. Keep sensitive configuration secure and exclude private configuration files from version control.
 
 ---
 
-# 🎯 Future Improvements
+# 🛣 Roadmap
 
-- Mobile App
-- Carbon Calculator
-- QR Rewards
-- Smart Notifications
-- AI Recommendation Engine
-- Smart City Dashboard
-- NGO Portal
-- Corporate Dashboard
-- Government Dashboard
-- Analytics Panel
+## Phase 1
 
----
+- [ ] AI Assistant (Dharti MITRA)
+- [ ] Community Leaderboard
+- [ ] Eco Challenges
 
-# 🌍 Vision
+## Phase 2
 
-> "Technology can change habits.
->
-> Habits can change people.
->
-> People can change the Planet."
+- [ ] Carbon Footprint Calculator
+- [ ] Waste Reporting System
+- [ ] Sustainability Knowledge Library
 
----
+## Phase 3
 
-# 👨‍💻 Developer
-
-**Abhay Kushwaha**
-
-📧 Email
-
-abhaykushwaha06@gmail.com
-
-💼 LinkedIn
-
-https://linkedin.com/in/abhay-kushwaha-715b20305
-
-💻 GitHub
-
-https://github.com/Abhay924
+- [ ] Green Events Directory
+- [ ] Progressive Web App (PWA)
+- [ ] Performance & UI Improvements
 
 ---
 
 # 🤝 Contributing
 
-Contributions are always welcome.
+Contributions are welcome and appreciated.
 
-Fork the repository
+1. Fork the repository.
+2. Create a new feature branch.
 
-Create your feature branch
+```bash
+git checkout -b feature/your-feature-name
+```
 
-Commit your changes
+3. Commit your changes.
 
-Push to the branch
+```bash
+git commit -m "Add your feature"
+```
 
-Create a Pull Request
+4. Push your branch.
+
+```bash
+git push origin feature/your-feature-name
+```
+
+5. Open a Pull Request.
+
+Please keep pull requests focused, well-documented, and aligned with the project's goals.
 
 ---
 
-# ⭐ Support
+# 📄 License
 
-If you like this project,
+This project is licensed under the **MIT License**.
 
-⭐ Star this repository
-
-🍴 Fork it
-
-📢 Share it
+See the **LICENSE** file for more information.
 
 ---
 
-# 📜 License
+# 👨‍💻 Author
 
-This project is licensed under the MIT License.
+<div align="center">
+
+## Abhay Kushwaha
+
+Frontend Developer • JavaScript Enthusiast • Sustainability Tech Learner
+
+<br>
+
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Abhay924)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/abhay-kushwaha-715b20305)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:abhaykushwaha06@gmail.com)
+
+</div>
 
 ---
 
 <div align="center">
 
-## 🌱 Together We Can Build A Greener Tomorrow 🌍
+Made with ❤️ to promote sustainable living.
 
-Made with ❤️ by **Abhay Kushwaha**
+⭐ If you find this project useful, consider giving it a star.
 
 </div>
